@@ -1,13 +1,26 @@
 <html>
 <head>
-    <title></title>
+    <title>HTML5 Particle System</title>
+    <style type="text/css">
+    body {
+        font-family:'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+        font-size:medium;
+        padding:10px;
+    }
+    </style>
     <script type="text/javascript" src="particle.js"></script>
     <script type="text/javascript">
         function init()
         {
             var canvas = document.getElementById('canvas');
-            var ps = new ParticleSystem(canvas);
-            ps.init();
+            var system = new ParticleSystem(canvas);
+            system.init();
+
+            setInterval(function()
+            {
+                document.getElementById("framerate").innerHTML = 
+                    "FPS: " + system.framerate();
+            }, 1000);
         }
 
         window.onload = init;
@@ -17,5 +30,6 @@
     <div id="content">
         <canvas id="canvas" width="640" height="480"></canvas>
     </div>
+    <div id="framerate">FPS: &infin;</div>
 </body>
 </html>

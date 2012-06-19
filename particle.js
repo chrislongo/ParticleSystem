@@ -80,6 +80,8 @@ var ParticleSystem = function(canvas)
     this.canvas = canvas;
     var particles = Array(100);
     var context;
+    var start = new Date();
+    var frames = 0;
 
     this.init = function()
     {
@@ -133,6 +135,7 @@ var ParticleSystem = function(canvas)
             }
         }
 
+        frames++;
         requestAnimFrame(function() { update(); });
     };
 
@@ -144,6 +147,18 @@ var ParticleSystem = function(canvas)
             (Math.random() * 255);
 
         return "#" + ("00000" + (color).toString(16)).slice(-6);
+    };
+
+    this.framerate = function()
+    {
+        var now = new Date();
+        var seconds = (now - start) / 1000;
+        var rate = frames / seconds;
+
+        start = now;
+        frames = 0;
+
+        return Math.round(rate);
     };
 };
 
