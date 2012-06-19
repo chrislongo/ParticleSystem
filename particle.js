@@ -9,6 +9,7 @@ var Particle = function(color)
     this.rotation = 0;
     this.scaleX = 1;
     this.scaleY = 1;
+    this.alpha = 1;
     this.color = (color) ? color : "#000";
 
     Particle.prototype.update = function(context)
@@ -37,6 +38,7 @@ var Shard = function(color)
         context.translate(this.x, this.y);
         context.rotate(this.rotation);
         context.scale(this.scaleX, this.scaleY);
+        context.globalAlpha = this.alpha;
         context.strokeStyle = this.color;
         context.lineWidth = 1;
         context.beginPath();
@@ -64,6 +66,7 @@ var Ball = function(color)
         context.translate(this.x, this.y);
         context.rotate(this.rotation);
         context.scale(this.scaleX, this.scaleY);
+        context.globalAlpha = this.alpha;
         context.fillStyle = this.color;
         context.beginPath();
         context.arc(0, 0, 2, 0, (Math.PI * 2), true);
@@ -111,6 +114,7 @@ var ParticleSystem = function(canvas)
         particle.scaleY = 1;
         particle.gravity = 0.15;
         particle.friction = 1;
+        particle.alpha = 0;
     };
 
     // main render loop
@@ -125,6 +129,7 @@ var ParticleSystem = function(canvas)
             particle.update(context);
             particle.scaleX += 0.025;
             particle.scaleY += 0.025;
+            particle.alpha += 0.03;
 
             if(particle.x > this.canvas.width ||
                 particle.y > this.canvas.height ||
