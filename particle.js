@@ -78,25 +78,29 @@ var Ball = function(color)
     Ball.prototype = new Particle();
 };
 
-var ParticleSystem = function(canvas)
+var ParticleSystem = new function()
 {
-    this.canvas = canvas;
-    var particles = Array(100);
+    var canvas;
     var context;
+    var particles = Array(500);
+    var particleCount = 300;
+    var gravity = 0.15;
+    var friction = 1;
     var start = new Date();
     var frames = 0;
 
-    this.init = function()
+    this.init = function(canvasElement)
     {
-        context = this.canvas.getContext('2d');
+        canvas = canvasElement;
+        context = canvas.getContext('2d');
         context.fillStyle = 'black';
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         for(var i = 0; i < particles.length; i++)
         {
             var particle = (Math.random() < 0.5)
                 ? new Shard(randomColor())
                 : new Ball(randomColor());
+            
             initParticle(particle);
             particles[i] = particle;
         }
@@ -106,23 +110,23 @@ var ParticleSystem = function(canvas)
 
     var initParticle = function(particle)
     {
-        particle.x = this.canvas.width / 2;
-        particle.y = this.canvas.height / 2;
+        particle.x = canvas.width / 2;
+        particle.y = canvas.height / 2;
         particle.vx = Math.random() * 10 - 5;
         particle.vy = Math.random() * 10 - 5;
         particle.scaleX = 1;
         particle.scaleY = 1;
-        particle.gravity = 0.15;
-        particle.friction = 1;
+        particle.gravity = gravity;
+        particle.friction = friction;
         particle.alpha = 0;
     };
 
     // main render loop
     var update = function()
     {
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        context.fillRect(0, 0, canvas.width, canvas.height);
         
-        for(var i = 0; i < particles.length; i++)
+        for(var i = 0; i < particleCount; i++)
         {
             var particle = particles[i];
             
@@ -130,9 +134,11 @@ var ParticleSystem = function(canvas)
             particle.scaleX += 0.025;
             particle.scaleY += 0.025;
             particle.alpha += 0.03;
+            particle.friction = friction;
+            particle.gravity = gravity;
 
-            if(particle.x > this.canvas.width ||
-                particle.y > this.canvas.height ||
+            if(particle.x > canvas.width ||
+                particle.y > canvas.height ||
                 particle.x < 0 ||
                 particle.y < 0)
             {
@@ -152,6 +158,24 @@ var ParticleSystem = function(canvas)
             (Math.random() * 255);
 
         return "#" + ("00000" + (color).toString(16)).slice(-6);
+    };
+
+    this.updateParticleCount = function(value)
+    {
+        particleCount = value;
+
+        for(var i = particleCount; i < particles.length; i++)
+            initParticle(particles[i]);
+    };
+
+    this.updateGravity = function(value)
+    {
+        gravity = value;
+    };
+
+    this.updateFriction = function(value)
+    {
+        friction = value;
     };
 
     this.framerate = function()

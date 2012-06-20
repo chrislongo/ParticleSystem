@@ -7,29 +7,39 @@
         font-size:medium;
         padding:10px;
     }
+    label {
+        display:block;
+        float:left;
+        width:75px;
+    }
+    input {
+        margin-bottom:10px;
+    }
+    #controls {
+        margin:10px;
+        font-size:small;
+    }
     </style>
     <script type="text/javascript" src="particle.js"></script>
-    <script type="text/javascript">
-        function init()
-        {
-            var canvas = document.getElementById('canvas');
-            var system = new ParticleSystem(canvas);
-            system.init();
-
-            setInterval(function()
-            {
-                document.getElementById("framerate").innerHTML = 
-                    "FPS: " + system.framerate();
-            }, 1000);
-        }
-
-        window.onload = init;
-    </script>
+    <script type="text/javascript" src="particle-ui.js"></script>
 </head>
 <body>
     <div id="content">
         <canvas id="canvas" width="640" height="480"></canvas>
+        <div id="controls">
+            <label for="particles">Particles:</label>
+            <input id="particles" type="range" min="100" max="500" value="300" step="50" onchange="updateVars(this);"/>
+            <span id="particles-value">300</span><br/>
+            <label for="gravity">Gravity:</label>
+            <input id="gravity" type="range" min="0.00" max="0.30" value="0.15" step="0.001" onchange="updateVars(this);"/>
+            <span id="gravity-value">0.15</span><br/>
+            <label for="friction">Friction:</label>
+            <input id="friction" type="range" min="0.95" max="1.05" value="1.00" step="0.001" onchange="updateVars(this);" />
+            <span id="friction-value">1.00</span><br/>
+            <button onclick="resetControls();">Reset</button>
+        </div>
+        </div>
+        <div id="framerate">FPS: &infin;</div>
     </div>
-    <div id="framerate">FPS: &infin;</div>
 </body>
 </html>
