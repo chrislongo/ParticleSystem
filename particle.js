@@ -10,7 +10,7 @@ var Particle = function(color)
     this.scaleX = 1;
     this.scaleY = 1;
     this.alpha = 1;
-    this.color = (color) ? color : "#000";
+    this.color = (color) ? color : 'black';
 
     Particle.prototype.update = function(context)
     {
@@ -82,16 +82,25 @@ var ParticleSystem = new function()
 {
     var canvas;
     var context;
+    var buffer;
+    var bufferContext;
+    var width;
+    var height;
+    
     var particles = Array(500);
     var particleCount = 300;
     var gravity = 0.15;
     var friction = 1;
+    
     var start = new Date();
     var frames = 0;
 
     this.init = function(canvasElement)
     {
         canvas = canvasElement;
+        width = canvas.width;
+        height = canvas.height;
+
         context = canvas.getContext('2d');
         context.fillStyle = 'black';
 
@@ -105,7 +114,18 @@ var ParticleSystem = new function()
             particles[i] = particle;
         }
 
+        initBuffer();
         update();
+    };
+
+    var initBuffer = function()
+    {
+        buffer = document.createElement('canvas');
+        buffer.width = width;
+        buffer.height = height;
+        buffer.style.visibility = 'hidden';
+        
+        bufferContext = buffer.getContext("2d");
     };
 
     var initParticle = function(particle)
@@ -124,13 +144,14 @@ var ParticleSystem = new function()
     // main render loop
     var update = function()
     {
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        bufferContext.fillRect(0, 0, width, height);
         
-        for(var i = 0; i < particleCount; i++)
+        for(var i = particleCount; i--;)
         {
             var particle = particles[i];
             
-            particle.update(context);
+            particle.update(bufferContext);
+            
             particle.scaleX += 0.025;
             particle.scaleY += 0.025;
             particle.alpha += 0.03;
@@ -145,6 +166,8 @@ var ParticleSystem = new function()
                 initParticle(particle);
             }
         }
+
+        context.drawImage(buffer, 0, 0, width, height);
 
         frames++;
         requestAnimFrame(function() { update(); });

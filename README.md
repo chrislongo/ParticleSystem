@@ -4,4 +4,7 @@
 
 http://chrislongo.net/html5/particle/
 
-HTML5 particle system demo complete with working physics.
+HTML5 particle system demo complete with working physics.  Pure HTML5 with 
+no external libraries.
+
+Works best in Chrome 19+.
