@@ -144,14 +144,7 @@ var ParticleSystem = new function()
     // main render loop
     var update = function()
     {
-        bufferContext.clearRect(0, 0, width, height);
-        context.fillRect(0, 0, width, height);
-
-        // clipping bounds
-        var cx = width;
-        var cy = height;
-        var cw = 0;
-        var ch = 0;
+        bufferContext.fillRect(0, 0, width, height);
 
         for(var i = particleCount; i--;)
         {
@@ -168,11 +161,6 @@ var ParticleSystem = new function()
                 continue;
             }
 
-            cx = Math.min(cx, particle.x);
-            cy = Math.min(cy, particle.y);
-            cw = Math.max(cw, width - particle.x);
-            ch = Math.max(ch, height - particle.y);
-
             particle.scaleX += 0.025;
             particle.scaleY += 0.025;
             particle.alpha += 0.03;
@@ -180,7 +168,7 @@ var ParticleSystem = new function()
             particle.gravity = gravity;
         }
 
-        context.drawImage(buffer, cx, cy, cw, ch);
+        context.drawImage(buffer, 0, 0, width, height);
 
         frames++;
         requestAnimFrame(function() { update(); });
