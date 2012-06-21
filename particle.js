@@ -78,6 +78,9 @@ var Ball = function(color)
     Ball.prototype = new Particle();
 };
 
+// yes, I am the only person I know who uses this style of coding
+// it's simplier to look at than the alternatives and does a good job
+// of hiding local vars
 var ParticleSystem = new function()
 {
     var canvas;
@@ -94,6 +97,7 @@ var ParticleSystem = new function()
     
     var start = new Date();
     var frames = 0;
+    var paused = 0; 
 
     this.init = function(canvasElement)
     {
@@ -113,6 +117,11 @@ var ParticleSystem = new function()
             initParticle(particle);
             particles[i] = particle;
         }
+
+        canvas.onclick = function()
+        {
+            paused = !paused;
+        };
 
         initBuffer();
         update();
@@ -144,34 +153,41 @@ var ParticleSystem = new function()
     // main render loop
     var update = function()
     {
-        bufferContext.fillRect(0, 0, width, height);
-
-        for(var i = particleCount; i--;)
+        if(!paused)
         {
-            var particle = particles[i];
-            
-            particle.update(bufferContext);
+            bufferContext.fillRect(0, 0, width, height);
 
-            if(particle.x > canvas.width ||
-                particle.y > canvas.height ||
-                particle.x < 0 ||
-                particle.y < 0)
+            for(var i = particleCount; i--;)
             {
-                initParticle(particle);
-                continue;
+                var particle = particles[i];
+                
+                particle.update(bufferContext);
+
+                if(particle.x > canvas.width ||
+                    particle.y > canvas.height ||
+                    particle.x < 0 ||
+                    particle.y < 0)
+                {
+                    initParticle(particle);
+                    continue;
+                }
+
+                particle.scaleX += 0.025;
+                particle.scaleY += 0.025;
+                particle.alpha += 0.03;
+                particle.friction = friction;
+                particle.gravity = gravity;
             }
 
-            particle.scaleX += 0.025;
-            particle.scaleY += 0.025;
-            particle.alpha += 0.03;
-            particle.friction = friction;
-            particle.gravity = gravity;
+            // double-buffering
+            context.drawImage(buffer, 0, 0, width, height);
         }
 
-        context.drawImage(buffer, 0, 0, width, height);
-
-        frames++;
-        requestAnimFrame(function() { update(); });
+        requestAnimFrame(function()
+        {
+            frames++;
+            update();
+        });
     };
 
     var randomColor = function()
