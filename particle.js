@@ -181,13 +181,10 @@ var ParticleSystem = new function()
 
             // double-buffering
             context.drawImage(buffer, 0, 0, width, height);
+            frames++;
         }
 
-        requestAnimFrame(function()
-        {
-            frames++;
-            update();
-        });
+        requestAnimFrame(function() { update(); });
     };
 
     var randomColor = function()
