@@ -97,7 +97,7 @@ var ParticleSystem = new function()
     
     var start = new Date();
     var frames = 0;
-    var paused = 0; 
+    var paused = 0;
 
     this.init = function(canvasElement)
     {
@@ -179,11 +179,14 @@ var ParticleSystem = new function()
                 particle.gravity = gravity;
             }
 
+            // z-order sort. alpha indicates depth ;)
+            particles.sort(function(a, b) { return b.alpha - a.alpha; });
+
             // double-buffering
             context.drawImage(buffer, 0, 0, width, height);
             frames++;
         }
-
+        
         requestAnimFrame(function() { update(); });
     };
 
