@@ -1,3 +1,5 @@
+// 2012 Chris Longo (cal@chrislongo.net)
+
 var Particle = function(color)
 {
     this.x = 0;
